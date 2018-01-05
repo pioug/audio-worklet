@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <script>
+    function startNoiseGenerator() {
+      const context = new AudioContext();
+      context.audioWorklet.addModule('./NoiseGenerator.js')
+        .then(() => {
+          const modulator = new OscillatorNode(context);
+          const noiseGenerator = new AudioWorkletNode(context, 'NoiseGenerator');
+          const paramAmp = noiseGenerator.parameters.get('amplitude');
+
+          noiseGenerator.connect(context.destination);
+          modulator.connect(paramAmp);
+          modulator.frequency.value = 0.5;
+          modulator.start();
+        });
+    }
+  </script>
+</head>
+<body>
+  <button onclick="startNoiseGenerator()">Start Noise Generator</button>
+</body>
+</html>
